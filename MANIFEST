@@ -1,0 +1,6 @@
+#!mast .ruby .yardopts bin demo lib test [A-Z]*.*
+.ruby
+lib/history.rb
+LICENSE.txt
+HISTORY.md
+README.md
