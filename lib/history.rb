@@ -19,10 +19,13 @@ require 'history/release'
 #
 #   * outline oimportant changelog items
 #
-# `Changes:` is used as a parsing marker. While optional, it
-# helps the parser find the list of changes, rather than looking
-# for an asterisk or digit, so that ordered and unordered lists
-# can be used in the note section too.
+# `Changes:` is used as a parsing marker. While optional, it helps the 
+# parser find the list of changes, rather than looking for an asterisk
+# or digit, so that ordered and unordered lists can be used in the note
+# section too.
+#
+# Ideally, this class will be continuely imporved to handle greater 
+# variety of layout.
 #
 class History
 
