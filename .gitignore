@@ -1,9 +1,7 @@
 .fire/digest
 .yardocs
-site/docs
 log
-ri
-work/sandbox
-site/readme.html
+tmp
 web
+work/sandbox
 DEMO.md
