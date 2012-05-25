@@ -54,7 +54,7 @@ title: History
 created: '2010-02-19'
 organization: Rubyworks
 summary: HISTORY and CHANGELOG parser
-version: 0.1.0
+version: 0.2.0
 description: ! 'History is a HISTORY file parser. It can parse common HISTORY file
   layouts
 
