@@ -1,4 +1,4 @@
-#require 'history/core_ext'
+require 'pathname'
 require 'history/release'
 
 # The History class is a HISTORY file parser. It parses HISTORY files
@@ -38,25 +38,40 @@ class History
   # Convenience constant for `File::FNM_CASEFOLD`.
   CASEFOLD = File::FNM_CASEFOLD
 
-  #
-  def self.parse(text, opts={})
-    opts[:text] = text
-    new(opts[:file], opts)
+  # Parse history from given text.
+  def self.parse(text)
+    new(text.to_s)
   end
 
-  def self.text(text, opts={})
-    parse(text, opts)
+  # Read and parse history from given file.
+  def self.read(file)
+    new(Pathname.new(file))
   end
 
-  #
-  def self.file(file)
-    new(file)
+  # Lookup history file given a project root directory.
+  # If a history file is not present, assume a default
+  # file name of `HISTORY`.
+  def self.at(root=Dir.pwd)
+    if file = Dir.glob(File.join(root, DEFAULT_FILE), CASEFOLD).first
+      new(Pathname.new(file))
+    else
+      file = File.join(root, 'HISTORY')
+      new(:file=>file)
+    end
   end
 
-  #
+  # Alias for #at.
   def self.find(root=Dir.pwd)
-    file = Dir.glob(File.join(root, DEFAULT_FILE), CASEFOLD).first
-    new(file)
+    at(root)
+  end
+
+  # Does a HISTORY file exist?
+  def self.exist?(path=Dir.pwd)
+    if File.directory?(path)
+      Dir.glob(File.join(path, DEFAULT_FILE), CASEFOLD).first
+    else
+      File.exist?(path) ? path : false
+    end
   end
 
   # HISTORY file's path.
@@ -69,46 +84,50 @@ class History
   attr :releases
 
   # New History.
-  def initialize(file=nil, opts={})
-    if Hash === file
+  def initialize(io=nil, opts={})
+    if Hash === io
       opts = file
-      file = nil
+      io   = nil
     end
 
-    @file = file
-    @text = opts[:text]
+    @releases = []
 
-    if @file
-      # if file is given but no text, raise error if file not found
-      raise "file not found" unless File.exist?(@file) unless @text
+    case io
+    when String
+      parse(io)
+    when Pathname
+      @file = io
+      parse(io.read)
+    when File
+      @file = io.path
+      parse(io.read)
     else
-      @file = Dir.glob(DEFAULT_FILE, CASEFOLD).first || 'HISTORY'
+      parse(io.read)
     end
 
-    unless @text
-      @text = File.read(@file) if File.exist?(@file)
-    end
-
-    parse
+    @file = opts[:file] if opts.key?(:file)
   end
 
-  # Read and parse the Histoy file.
-  def parse
-    @releases = []
-    entry = nil
+  # Does history file exist?
+  def exist?
+    File.file?(@file)
+  end
 
-    if text
-      text.each_line do |line|
-        if HEADER_RE =~ line
-          @releases << Release.new(entry) if entry
-          entry = line
-        else
-          next unless entry
-          entry << line
-        end
+  # Parse History text.
+  def parse(text)
+    return unless text
+    releases, entry = [], nil
+    text.each_line do |line|
+      if HEADER_RE =~ line
+        releases << Release.new(entry) if entry
+        entry = line
+      else
+        next unless entry
+        entry << line
       end
-      @releases << Release.new(entry)
     end
+    releases << Release.new(entry)
+    @releases = releases
   end
 
   # Lookup release by version.
@@ -116,7 +135,7 @@ class History
     releases.find{ |r| r.version == version }
   end
 
-  # Returns first entry in releases list.
+  # Returns first entry in release list.
   def release
     releases.first
   end

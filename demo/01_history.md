@@ -61,7 +61,7 @@ The initializer takes the root directory for the project
 and looks for a file called +HISTORY+, optionally ending
 in an extension such as +.txt+ or +.rdoc+, etc.
 
-    history = History.find('tmp/example')
+    history = History.at('tmp/example')
 
 Now we should have an enumeration of each release entry in
 the HISTORY file.
