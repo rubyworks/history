@@ -1,5 +1,15 @@
 # RELEASE HISTORY
 
+## 0.3.0 / 2012-05-27
+
+New release makes the constructor interface more flexible, in part
+by making use of the Pathname library.
+
+Changes:
+
+* Improves constructor interface.
+
+
 ## 0.2.0 / 2012-05-25
 
 This the first usable release. There's actual code now ;)
