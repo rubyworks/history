@@ -1,5 +1,18 @@
 # RELEASE HISTORY
 
+## 0.3.1 / 2012-12-19
+
+This release makes a couple of small improvements. First, the
+`Changes` marker no long requires a colon. Second, numerically
+index change lists will be serach for from the bottom up, making
+their parsing a tad more robust.
+
+Changes:
+
+* The `changes` marker no longer needs a colon.
+* Numerically index changes are parsed from the bottom up.
+
+
 ## 0.3.0 / 2012-05-27
 
 New release makes the constructor interface more flexible, in part
