@@ -36,7 +36,7 @@ class History
       text
     end
 
-    ;; private
+  private
 
     # Parse the release text into +header+, +notes+
     # and +changes+ components.
@@ -50,11 +50,7 @@ class History
       # remove blank lines from top
       lines.shift until lines.first !~ /^\s+$/
 
-      # find line that looks like the startt of a list of c hanges.
-      idx = nil
-      idx ||= lines.index{ |line| /^changes\:\s*$/i =~ line }
-      idx ||= lines.index{ |line| /^1.\ / =~ line }
-      idx ||= lines.index{ |line| /^\*\ / =~ line }
+      idx = find_changes(lines)
 
       if idx.nil?
         @notes   = lines.join
@@ -62,7 +58,7 @@ class History
       elsif idx > 0
         @notes   = lines[0...idx].join
         @changes = lines[idx..-1].join
-      else
+      else # hmmm... is this ever used?
         gap = lines.index{ |line| /^\s*$/ =~ line }
         @changes = lines[0...gap].join
         @notes   = lines[gap..-1].join
@@ -84,6 +80,27 @@ class History
       if md = /\"(.*?)\"/.match(text)
         @nickname = md[1]
       end
+    end
+
+    # Find line that looks like the start of a list of changes.
+    def find_changes(lines)
+      # look for a `changes` marker
+      if idx = lines.index{ |line| /^changes\:?\s*$/i =~ line }
+        return idx
+      end
+
+      # look for an enumerated list in reverse order
+      if idx = lines.reverse.index{ |line| /^1\.\ / =~ line }
+        idx = lines.size - idx - 1
+        return idx 
+      end
+
+      # look for first outline bullet
+      if idx = lines.index{ |line| /^\*\ / =~ line }
+        return idx
+      end
+
+      return nil
     end
 
   end
