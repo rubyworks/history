@@ -33,7 +33,7 @@ class History
   DEFAULT_FILE = '{History}{,.*}'
 
   # Match against version number string.
-  HEADER_RE = /^[=#]+\s*\d+\.\S+/
+  HEADER_RE = /^[=#]+\s*v?\d+\.\S+/
 
   # Convenience constant for `File::FNM_CASEFOLD`.
   CASEFOLD = File::FNM_CASEFOLD
@@ -126,7 +126,7 @@ class History
         entry << line
       end
     end
-    releases << Release.new(entry)
+    releases << Release.new(entry) if entry
     @releases = releases
   end
 
