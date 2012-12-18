@@ -48,13 +48,24 @@ Given a HISTORY project file containing:
 
     == 0.9.0 / 2010-04-10
 
+    Some Dandy description of the 0.9.0 release.
+    Notice this time that the changes are numerically enumerated.
+
     1. This is change 1.
     2. This is change 2.
     3. This is change 3.
 
-    Some Dandy description of the 0.9.0 release.
+
+    == 0.8.0 / 2010-02-10
+
+    1. This is change 1.
+    2. This is change 2.
+    3. This is change 3.
+
+    Some Dandy description of the 0.8.0 release.
     Notice this time that the changes are listed
     first and are numerically enumerated.
+
 
 The History class provides an interface to this information.
 The initializer takes the root directory for the project
@@ -66,7 +77,7 @@ in an extension such as +.txt+ or +.rdoc+, etc.
 Now we should have an enumeration of each release entry in
 the HISTORY file.
 
-    history.releases.size.assert == 4
+    history.releases.size.assert == 5
 
 The non-plurual #release method will give us the first entry.
 And we can see that it has been parsed into its component
@@ -94,11 +105,17 @@ still parsed correctly. For example the second release has a nick name.
 
     history.releases[1].nickname.assert == 'Happy Days'
 
-And the last entry has it's changes listed before the description.
+The next to last entry has it's changes listed before the description.
 
     history.releases[3].header.assert == '== 0.9.0 / 2010-04-10'
     history.releases[3].notes.assert.index('description of the 0.9.0')
     history.releases[3].changes.assert.index('This is change 1')
+
+And the last entry has it's changes listed before the description.
+
+    history.releases[4].header.assert == '== 0.8.0 / 2010-02-10'
+    history.releases[4].notes.assert.index('description of the 0.8.0')
+    history.releases[4].changes.assert.index('This is change 1')
 
 The history parser is farily simplistic, but it is flexibile enough
 to parse the most common HISTORY file formats.
