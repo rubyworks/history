@@ -86,7 +86,7 @@ class History
   # New History.
   def initialize(io=nil, opts={})
     if Hash === io
-      opts = file
+      opts = io
       io   = nil
     end
 
@@ -102,9 +102,10 @@ class History
       @file = io.path
       parse(io.read)
     else
-      parse(io.read)
+      parse(io.read) if io
     end
 
+    # file can be overidden
     @file = opts[:file] if opts.key?(:file)
   end
 
